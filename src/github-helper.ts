@@ -49,19 +49,6 @@ export async function createPullRequest(
 
     // Apply labels
     if (inputs.labels.length > 0) {
-      const prLabels =
-        github.context.payload &&
-        github.context.payload.pull_request &&
-        github.context.payload.pull_request.labels
-
-      if (prLabels) {
-        for (const item of prLabels) {
-          if (item.name !== inputs.branch) {
-            inputs.labels.push(item.name)
-          }
-        }
-      }
-
       core.info(`Applying labels '${inputs.labels}'`)
       await octokit.issues.addLabels({
         owner,
