@@ -66,16 +66,6 @@ function createPullRequest(inputs, prBranch) {
             });
             // Apply labels
             if (inputs.labels.length > 0) {
-                const prLabels = github.context.payload &&
-                    github.context.payload.pull_request &&
-                    github.context.payload.pull_request.labels;
-                if (prLabels) {
-                    for (const item of prLabels) {
-                        if (item.name !== inputs.branch) {
-                            inputs.labels.push(item.name);
-                        }
-                    }
-                }
                 core.info(`Applying labels '${inputs.labels}'`);
                 yield octokit.issues.addLabels({
                     owner,
@@ -214,10 +204,6 @@ function run() {
             core.startGroup('Cherry picking');
             const result = yield gitExecution([
                 'cherry-pick',
-                '-m',
-                '1',
-                '--strategy=recursive',
-                '--strategy-option=theirs',
                 `${githubSha}`
             ]);
             if (result.exitCode !== 0 && !result.stderr.includes(CHERRYPICK_EMPTY)) {
