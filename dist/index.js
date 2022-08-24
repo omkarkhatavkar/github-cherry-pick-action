@@ -50,11 +50,18 @@ function createPullRequest(inputs, prBranch) {
                 github.context.payload.pull_request &&
                 github.context.payload.pull_request.title;
             core.info(`Using body '${title}'`);
+            // Get HEAD SHA
+            const sha = github.context.payload &&
+                github.context.payload.pull_request &&
+                github.context.payload.pull_request.head &&
+                github.context.payload.pull_request.head.sha;
+            core.info(`Using sha '${sha}'`);
             // Get PR body
             const body = github.context.payload &&
                 github.context.payload.pull_request &&
                 github.context.payload.pull_request.body;
             core.info(`Using body '${body}'`);
+            const mod_body = sha + '/n' + body;
             // Create PR
             const pull = yield octokit.pulls.create({
                 owner,
@@ -62,7 +69,7 @@ function createPullRequest(inputs, prBranch) {
                 head: prBranch,
                 base: inputs.branch,
                 title,
-                body
+                mod_body
             });
             // Apply labels
             if (inputs.labels.length > 0) {
