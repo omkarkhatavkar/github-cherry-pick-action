@@ -61,15 +61,15 @@ function createPullRequest(inputs, prBranch) {
                 github.context.payload.pull_request &&
                 github.context.payload.pull_request.body;
             core.info(`Using body '${body}'`);
-            const mod_body = sha + '/n' + body;
+            const mod_body = sha + '\n' + body;
             // Create PR
             const pull = yield octokit.pulls.create({
                 owner,
                 repo,
+                title,
                 head: prBranch,
                 base: inputs.branch,
-                title,
-                mod_body
+                body: mod_body
             });
             // Apply labels
             if (inputs.labels.length > 0) {
