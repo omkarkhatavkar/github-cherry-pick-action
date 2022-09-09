@@ -61,12 +61,13 @@ function createPullRequest(inputs, prBranch) {
                 github.context.payload.pull_request &&
                 github.context.payload.pull_request.body;
             core.info(`Using body '${body}'`);
-            const mod_body = sha + '\n' + body;
+            const mod_body = 'Cherrypick of commit: ' + sha + '\n\n' + body;
+            const mod_title = '[' + inputs.branch + '] ' + title;
             // Create PR
             const pull = yield octokit.pulls.create({
                 owner,
                 repo,
-                title,
+                title: mod_title,
                 head: prBranch,
                 base: inputs.branch,
                 body: mod_body
