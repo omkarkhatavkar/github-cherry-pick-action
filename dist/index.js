@@ -50,18 +50,16 @@ function createPullRequest(inputs, prBranch) {
                 github.context.payload.pull_request &&
                 github.context.payload.pull_request.title;
             core.info(`Using body '${title}'`);
-            // Get HEAD SHA
-            const sha = github.context.payload &&
-                github.context.payload.pull_request &&
-                github.context.payload.pull_request.head &&
-                github.context.payload.pull_request.head.sha;
-            core.info(`Using sha '${sha}'`);
+            // Get HEAD Pull Request Number
+            const { number } = github.context.issue;
+            const repoUrl = `https://github.com/${owner}/${repo}`;
+            const pull_request = `${repoUrl}/pull/${number}`;
             // Get PR body
             const body = github.context.payload &&
                 github.context.payload.pull_request &&
                 github.context.payload.pull_request.body;
             core.info(`Using body '${body}'`);
-            const mod_body = 'Cherrypick of commit: ' + sha + '\n\n' + body;
+            const mod_body = 'Parent PR Number: ' + pull_request + '\n\n' + body;
             const mod_title = '[' + inputs.branch + '] ' + title;
             // Create PR
             const pull = yield octokit.pulls.create({
@@ -212,6 +210,7 @@ function run() {
             core.startGroup('Cherry picking');
             const result = yield gitExecution([
                 'cherry-pick',
+                '-x',
                 '-m',
                 '1',
                 '--strategy=resolve',
