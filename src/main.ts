@@ -56,6 +56,7 @@ export async function run(): Promise<void> {
     core.startGroup('Cherry picking')
     const result = await gitExecution([
       'cherry-pick',
+      '-x',
       '-m',
       '1',
       '--strategy=resolve',
