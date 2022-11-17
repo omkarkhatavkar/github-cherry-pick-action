@@ -18,7 +18,7 @@ export interface Inputs {
 export async function createPullRequest(
   inputs: Inputs,
   prBranch: string
-): Promise<void> {
+): Promise<any> {
   const octokit = github.getOctokit(inputs.token)
   if (process.env.GITHUB_REPOSITORY !== undefined) {
     const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
@@ -102,5 +102,6 @@ export async function createPullRequest(
         throw e
       }
     }
+    return pull
   }
 }

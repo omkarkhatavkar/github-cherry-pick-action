@@ -64,6 +64,20 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+### Using outputs:
+```yml
+steps:
+  - uses: actions/checkout@v3
+  - uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+    id: new-issue
+    with:
+      branch: release-v2.0
+      labels: cherry-pick
+    - run: |
+        echo "${{ steps.new-issue.outputs.data }}"
+        echo "${{ steps.new-issue.outputs.number }}" 
+        echo "${{ steps.new-issue.outputs.html_url }}"
+```
 ### Working with forked repositories
 
 If you are using this action while working with forked repositories (e.g. when you get pull requests from external contributors), you will have to adapt the trigger to avoid permission problems.
@@ -94,6 +108,14 @@ Mor informatoin can be found in the [GitHub Blog](https://github.blog/2020-08-03
 | `assignees` | A comma or newline-separated list of assignees (GitHub usernames). | |
 | `reviewers` | A comma or newline-separated list of reviewers (GitHub usernames) to request a review from. | |
 | `team-reviewers` | A comma or newline-separated list of GitHub teams to request a review from. Note that a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) may be required. | |
+
+### Action outputs
+
+| output   | value |
+|----------| ----- |
+| data     | [See Response](https://docs.github.com/en/rest/issues/issues#create-an-issue) |
+| html_url | the issue's web url |
+| number   | the issue's number |
 
 ## License
 
